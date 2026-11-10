@@ -33,11 +33,15 @@ def main():
         # Appelle la fonction qui gère la logique pour les bûches de bois 
         handle_logs()
 
+ 
+
+
         # Si la grenouille est sur une bûche, elle suit son mouvement
         if frog_dict["on_log"]:
             frog_dict["x"] += frog_dict["log_speed"]
 
         current_time = pygame.time.get_ticks()
+
 
         # Vérifier si on est dans une voie de log (rivière)
         in_log_lane = any(
@@ -46,7 +50,7 @@ def main():
             frog_dict["y"] < lane["y"] + LANE_HEIGHT    # haut grenouille < bas voie
             for lane in LANES
         )
-
+        
         # Si dans rivière, pas sur bûche, et pas déjà en état eau
         if in_log_lane and not frog_dict["on_log"] and not frog_dict["in_water"]:
             frog_dict["in_water"] = True

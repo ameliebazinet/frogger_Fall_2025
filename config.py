@@ -36,3 +36,5 @@ LIVES = 3
 
 # Nombre de "frames per second"
 FPS = 60
+
+print(LANES)

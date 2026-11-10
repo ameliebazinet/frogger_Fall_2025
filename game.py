@@ -23,6 +23,32 @@ def move_entities():
 
 def handle_input(event): 
 
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_LEFT:
+            frog_dict["x"]-=(frog_dict["speed"])
+        if event.key == pygame.K_RIGHT:
+            frog_dict["x"]+=(frog_dict["speed"])
+        if event.key == pygame.K_UP:
+            frog_dict["y"]-=(frog_dict["speed"])
+        if event.key == pygame.K_DOWN:
+            frog_dict["y"]+=(frog_dict["speed"])
+    
+        #créons les limites de l'écran 
+        #quand la grenouille va trop à gauche
+        if frog_dict ["x"]<0:
+            frog_dict["x"]=0
+        # quand la grenouille va trop à droite : 
+        if frog_dict["x"]>(SCREEN_WIDTH - FROG_SIZE):
+            frog_dict["x"]= SCREEN_WIDTH - FROG_SIZE
+        # quand la grenouillle va trop en haut : 
+        if frog_dict ["y"]<0: 
+            frog_dict["y"]=0
+        # quand la grenouille va trop en bas : 
+        if frog_dict["y"]>(SCREEN_HEIGHT - FROG_SIZE):
+            frog_dict["y"]= SCREEN_HEIGHT - FROG_SIZE
+
+    
+
 
 
 
@@ -35,12 +61,13 @@ def handle_input(event):
 
 # ======================== PARTIE 2.3 ===========================
 #
-# TODO : Complétez la fonction `check_collision`, qui détecte les collisions entre la grenouille
+# TODO : Compléter la fonction `check_collision`, qui détecte les collisions entre la grenouille
 # et les voitures. 
 # 
 # Étapes à suivre : 
 # - Créer un rectangle (`pygame.Rect`) représentant la grenouille. 
-# - Parcourir toutes les voies de type "car" dans la liste "lanes".
+# - Parcourir toutes les voies dans la liste "LANES".
+# - Vérifier si la voie est de type "road".
 # - Pour chaque voiture dans une voie : 
 #     - Créer un rectangle basé sur l'image et la position de la voiture
 #     - Vérifier si ce rectangle entre en collision avec celui de la grenouille, à l'aide
@@ -50,13 +77,20 @@ def handle_input(event):
 # Voir le README.md pour des détails supplémentaires sur les fonctions pygame. 
 
 def check_collision():
-
-
-
-
-
+    #rectangle reprsentant la grenouille : 
+    rectangle_grenouille= pygame.Rect(frog_dict["x"],frog_dict["y"],FROG_SIZE,FROG_SIZE)
+    for voie in LANES : 
+        if voie["type"] == "road":
+            for auto in voie["entities"]:     
+                auto_rect = pygame.Rect(auto["x"],auto["y"],auto["width"],auto["height"])
+                   
+                if rectangle_grenouille.colliderect(auto_rect):
+                    return True    
+    
 
     return False
+
+   
 
 # =================================================================
 
@@ -77,13 +111,26 @@ def check_collision():
 # - Sortez de la fonction (return).
 # - Si aucune bûche n'est en contact avec la grenouille, la variable frog["log_speed"] doit être remise à 0.
 
+
 def handle_logs():
+    
+    frog_dict["on_log"] = False 
+   
+    marge = 10
+    rectangle_grenouille = pygame.Rect(int(frog_dict["x"] + marge),int(frog_dict["y"] + marge),int(FROG_SIZE - 2 * marge),int(FROG_SIZE - 2 * marge)
+    )
+    
+    for voie in LANES:
+        if voie["type"] == "river": 
+            for buche in voie["entities"]: 
+                buche_rect = pygame.Rect(buche["x"], buche["y"], buche["width"], buche["height"])
 
-
-
-
-
-    return
+                if rectangle_grenouille.colliderect(buche_rect):
+                    frog_dict["on_log"] = True
+                    frog_dict["log_speed"] = voie["speed"]
+                    return
+    
+    frog_dict["log_speed"] = 0
 
 # =================================================================
 

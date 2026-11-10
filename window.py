@@ -31,12 +31,40 @@ background_img = pygame.transform.scale(background_img, (SCREEN_WIDTH, SCREEN_HE
 # - Ajoutez la voie complète à la structure qui gère l’ensemble des voies (lanes).
 
 def add_road_lanes():
+    espacement = 250
+    for i in range(4):
+        y_position= (SCREEN_HEIGHT)-((i+2) * LANE_HEIGHT)
+        #création des voies paires : 
+        if i % 2 == 0:
+            choix_de_vitesse=[2,3,4]
+            direction= "right"
+            vitesse_de_la_voie=random.choice(choix_de_vitesse)
+         # nous avons les voies impaire    
+        else : 
+            direction = "left"
+            vitesse_gauche= [-2,-3,-4]
+            vitesse_de_la_voie=random.choice(vitesse_gauche)
+        #on veut que les voitures aparraoissent dans chaque voie donc on se met dans la boucle principale 
+        cars= []
+        #on fait une boucle pour ajouter des autos dans les voies
+        for a in range(3):
+            car = {
+       "width":100 , 
+       "height":50,
+       "x": a * 250 + random.randint(18,200),       
+       "y": y_position + (LANE_HEIGHT - 50)//2,     
+       "image": random.choice(cars_dict[direction])}
+        
+        #ajouter le dictionnaire à la liste : 
+            cars.append(car)
 
-
-
-
-
-    return
+        # ajout d'un nouveau dictionnaire à la liste lane :
+        LANES.append({
+        "type": "road",
+        "speed": vitesse_de_la_voie, 
+        "y":y_position,
+        "entities":cars })
+   
 
 
 # ===============================================================
@@ -71,7 +99,33 @@ def add_grass_lane():
 
 def add_river_lanes():
     
+    for i in range(4 ): 
+        y_eau = (SCREEN_HEIGHT)-((7 + i) * LANE_HEIGHT)
+        if i % 2 == 0:
+            choix_de_vitesse=[2,3,4]
+            vitesse_de_la_voie=random.choice(choix_de_vitesse)
 
+        else : 
+            vitesse_gauche= [-2,-3,-4]
+            vitesse_de_la_voie=random.choice(vitesse_gauche)
+    # on fait la boucle pour ajouter les buches dans les voies 
+    # savoir quelle est la taille des buches
+    
+        logs = []
+        for b in range(3) : 
+            taille = ["short","medium","long"]
+            size = random.choice(taille)
+            log = { "width" : LOG_SIZES[size][0], 
+                   "height" : LOG_SIZES[size][1], 
+                   "x" : b * 250 + random.randint(20,200),
+                   "y" : y_eau + (LANE_HEIGHT - 50)//2,
+                   "image" : logs_dict[size] }
+            logs.append(log)
+        LANES.append(
+            { "type" : "river",
+                "speed" : vitesse_de_la_voie, 
+                "y" : y_eau,
+                "entities" : logs})
 
 
 
